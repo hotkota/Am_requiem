@@ -1,6 +1,6 @@
-# bot
+# Am
 
-TODO: Write a description here
+[Discord server](https://discord.gg/rgsV2AQ)
 
 ## Installation
 
