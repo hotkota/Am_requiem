@@ -7,9 +7,10 @@ module Am
 
   # TODO: Put your code here
   client = Discord::Client.new(token: "Bot #{YAML.parse(File.open("./config.yml"))["token"].as_s}", client_id: (YAML.parse(File.open("./config.yml"))["client_id"]).as_i64.to_u64, intents: Discord::Gateway::Intents::Guilds | Discord::Gateway::Intents::GuildMessages)
+  PREFIX = YAML.parse(File.open("./config.yml"))["prefix"].as_s
 
   client.on_message_create do |message|
-    if message.content.starts_with? "!ping"
+    if message.content.starts_with? "#{PREFIX}ping"
       client.create_message(message.channel_id, "Pong!")
     end
   end

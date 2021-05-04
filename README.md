@@ -13,12 +13,12 @@ shards install
 ## Usage
 
 ```bash
-crystal run src/bot.cr
+crystal run src/am.cr
 ```
 or
 
 ```bash
-crystal build src/bot.cr
+crystal build src/am.cr
 ./bot
 ```
 
