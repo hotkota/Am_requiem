@@ -4,11 +4,23 @@ TODO: Write a description here
 
 ## Installation
 
-TODO: Write installation instructions here
+```bash
+git clone https://github.com/Hotkota/Am_requiem.git
+cd Am_requiem
+shards install
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+```bash
+crystal run src/bot.cr
+```
+or
+
+```bash
+crystal build src/bot.cr
+./bot
+```
 
 ## Development
 
@@ -24,4 +36,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [your-name-here](https://github.com/your-github-user) - creator and maintainer
+- [Hot_kota](https://github.com/Hotkota) - creator and maintainer
