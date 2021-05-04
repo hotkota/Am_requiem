@@ -2,7 +2,7 @@ require "yaml"
 require "discordcr"
 
 # TODO: Write documentation for `Bot`
-module Bot
+module Am
   VERSION = "0.1.0"
 
   # TODO: Put your code here

@@ -1,2 +1,2 @@
 require "spec"
-require "../src/bot"
+require "../src/am"
