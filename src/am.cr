@@ -1,5 +1,7 @@
 require "yaml"
+require "redis"
 require "discordcr"
+require "./cogs/init"
 
 # TODO: Write documentation for `Bot`
 module Am
@@ -14,13 +16,9 @@ module Am
 
   client.on_message_create do |message|
     if (message.content.starts_with? "#{PREFIX}ping") || (message.content.starts_with? "#{PREFIX}пинг")
-      if cache.resolve_guild(message.guild_id.not_nil!.to_u64).region == "russia"
-        m = client.create_message(message.channel_id, "Понг!")
-        client.edit_message(m.channel_id, m.id, "Понг! Задержка: #{(Time.utc - message.timestamp).total_milliseconds} мс.")
-      else
-        m = client.create_message(message.channel_id, "Pong!")
-        client.edit_message(m.channel_id, m.id, "Pong! Time taken: #{(Time.utc - message.timestamp).total_milliseconds} ms.")
-      end
+      Commands.ping(client, cache, message)
+    elsif (message.content.starts_with? "#{PREFIX}tag") || (message.content.starts_with? "#{PREFIX}тег")
+      Commands.tags(client, message)
     end
   end
   
