@@ -11,6 +11,10 @@ module Command
                         name: "Информация",
                         value: "`#{prefix}хелп` `#{prefix}пинг`"
                     ),
+                    Discord::EmbedField.new(
+                        name: "Теги",
+                        value: "`#{prefix}тег ?`"
+                    ),
                 ],
                 timestamp: Time.utc
             )
@@ -23,6 +27,10 @@ module Command
                     Discord::EmbedField.new(
                         name: "info",
                         value: "`#{prefix}help` `#{prefix}ping`"
+                    ),
+                    Discord::EmbedField.new(
+                        name: "tag",
+                        value: "`#{prefix}tag ?`"
                     ),
                 ],
                 timestamp: Time.utc
