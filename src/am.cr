@@ -13,10 +13,19 @@ module Am
   cache = Discord::Cache.new(client)
   client.cache = cache
 
-  PREFIX = YAML.parse(File.open("./config.yml"))["prefix"].as_s
-
   Redis_DB_Member = YAML.parse(File.open("./config.yml"))["redis"]["members"].as_i
   Redis_DB_Guild = YAML.parse(File.open("./config.yml"))["redis"]["guilds"].as_i
+
+  client.on_ready do
+    client.status_update(
+      status: "online",
+      game: Discord::GamePlaying.new(
+        name: "crystal",
+        type: Discord::GamePlaying::Type::Listening
+      ),
+    )
+    puts "ready!"
+  end
 
   client.on_message_create do |message|
     if !message.author.bot
@@ -33,19 +42,23 @@ module Am
         if redis.get(cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s).nil?
           redis.set(
             cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s,
-            {"prefix" => PREFIX, "premium" => false}.to_yaml.to_s
+            {"prefix" => "//", "premium" => false}.to_yaml.to_s
           )
         end
       end
-
-      if (message.content.starts_with? "#{PREFIX}ping") || (message.content.starts_with? "#{PREFIX}пинг")
-        Commands.ping(client, cache, message)
-      elsif (message.content.starts_with? "#{PREFIX}tag") || (message.content.starts_with? "#{PREFIX}тег")
-        Commands.tags(client, message, YAML.parse(File.open("./config.yml"))["redis"]["tags"].as_i, PREFIX, cache)
-      elsif (message.content.starts_with? "#{PREFIX}help") || (message.content.starts_with? "#{PREFIX}хелп")
-        Commands.help(client, cache, message, PREFIX)
-      elsif (message.content.starts_with? "#{PREFIX}bonus") || (message.content.starts_with? "#{PREFIX}бонус")
-        Commands.premium(client, cache, message, YAML.parse(File.open("./config.yml"))["redis"]["members"].as_i)
+      Redis.open(database: Redis_DB_Guild) do |redis|
+        prefix = YAML.parse(redis.get(cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s).not_nil!)["prefix"]
+        if (message.content.starts_with? "#{prefix}ping") || (message.content.starts_with? "#{prefix}пинг")
+          Commands.ping(client, cache, message)
+        elsif (message.content.starts_with? "#{prefix}tag") || (message.content.starts_with? "#{prefix}тег")
+          Commands.tags(client, message, YAML.parse(File.open("./config.yml"))["redis"]["tags"].as_i, prefix, cache)
+        elsif (message.content.starts_with? "#{prefix}help") || (message.content.starts_with? "#{prefix}хелп")
+          Commands.help(client, cache, message, prefix)
+        elsif (message.content.starts_with? "#{prefix}bonus") || (message.content.starts_with? "#{prefix}бонус")
+          Commands.premium(client, cache, message, Redis_DB_Member)
+        elsif (message.content.starts_with? "#{prefix}prefix") || (message.content.starts_with? "#{prefix}префикс")
+          Commands.prefix(client, cache, message, Redis_DB_Guild, prefix)
+        end
       end
     end
   end

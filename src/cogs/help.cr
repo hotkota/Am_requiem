@@ -15,6 +15,10 @@ module Command
                         name: "Теги",
                         value: "`#{prefix}тег ?`"
                     ),
+                    Discord::EmbedField.new(
+                        name: "Настройка",
+                        value: "`#{prefix}префикс`"
+                    )
                 ],
                 timestamp: Time.utc
             )
@@ -32,6 +36,10 @@ module Command
                         name: "tag",
                         value: "`#{prefix}tag ?`"
                     ),
+                    Discord::EmbedField.new(
+                        name: "settings",
+                        value: "`#{prefix}prefix`"
+                    )
                 ],
                 timestamp: Time.utc
             )

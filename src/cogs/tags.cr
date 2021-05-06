@@ -3,8 +3,7 @@ require "discordcr"
 
 module Command
     def tags(client, message, db, prefix, cache)
-        content = (message.content).split(" ", limit: 3, remove_empty: true)
-        content.shift
+        content = message.content.lchop("#{prefix}tag").lchop("#{prefix}тег").strip().split(" ", limit: 2, remove_empty: true)
         if !content.empty?
             if content[0] == "create" || content[0] == "создать"
                 if content[1].split("|", limit: 3, remove_empty: true).size == 2
