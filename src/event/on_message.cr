@@ -1,10 +1,11 @@
 require "yaml"
 require "redis"
+require "../config"
 require "../settings"
 require "../cogs/init"
 
-Redis_DB_Member = YAML.parse(File.open("./config.yml"))["redis"]["members"].as_i
-Redis_DB_Guild = YAML.parse(File.open("./config.yml"))["redis"]["guilds"].as_i
+Redis_DB_Member = Config::Redis["members"]
+Redis_DB_Guild = Config::Redis["guilds"]
 
 module Event
     def on_message(client, cache, message)
@@ -32,7 +33,7 @@ module Event
                 if (message.content.starts_with? "#{prefix}ping") || (message.content.starts_with? "#{prefix}пинг")
                     Commands.ping(client, cache, message)
                 elsif (message.content.starts_with? "#{prefix}tag") || (message.content.starts_with? "#{prefix}тег")
-                    Commands.tags(client, message, YAML.parse(File.open("./config.yml"))["redis"]["tags"].as_i, prefix, cache)
+                    Commands.tags(client, message, Config::Redis["tags"], prefix, cache)
                 elsif (message.content.starts_with? "#{prefix}help") || (message.content.starts_with? "#{prefix}хелп")
                     Commands.help(client, cache, message, prefix)
                 elsif (message.content.starts_with? "#{prefix}bonus") || (message.content.starts_with? "#{prefix}бонус")

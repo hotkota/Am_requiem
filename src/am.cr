@@ -1,4 +1,6 @@
+require "log"
 require "yaml"
+require "./config"
 require "discordcr"
 require "./event/init"
 
@@ -7,7 +9,8 @@ module Am
   VERSION = "0.1.0"
 
   # TODO: Put your code here
-  client = Discord::Client.new(token: "Bot #{YAML.parse(File.open("./config.yml"))["token"].as_s}", client_id: (YAML.parse(File.open("./config.yml"))["client_id"]).as_i64.to_u64, intents: Discord::Gateway::Intents::Guilds | Discord::Gateway::Intents::GuildMessages)
+  Log.setup(:notice)
+  client = Discord::Client.new(token: "Bot #{Config::Token}", client_id: Config::Client_id, intents: Discord::Gateway::Intents::Guilds | Discord::Gateway::Intents::GuildMessages)
   cache = Discord::Cache.new(client)
   client.cache = cache
 

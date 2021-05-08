@@ -1,9 +1,0 @@
-token: token
-client_id: 737987355389984848
-prefix: "//"
-
-# redis db number
-redis:
-  tags: 0
-  members: 1
-  guilds: 2
