@@ -40,6 +40,8 @@ module Event
                     Commands.premium(client, cache, message, Redis_DB_Member)
                 elsif (message.content.starts_with? "#{prefix}prefix") || (message.content.starts_with? "#{prefix}префикс")
                     Commands.prefix(client, cache, message, Redis_DB_Guild, prefix)
+                elsif (message.content =="<@#{Config::Client_id}>")
+                    Commands.prefix_find(client, message, cache, prefix)
                 end
             end
         end
