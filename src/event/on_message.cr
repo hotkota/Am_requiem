@@ -33,7 +33,9 @@ module Event
 							"premium" => false,
 							"log_channel" => nil,
 							"hello_channel" => nil,
-							"leave_channel" => nil
+							"hello_message" => nil,
+							"leave_channel" => nil,
+							"leave_message" => nil,
 						}.to_yaml.to_s
 					)
 				end
