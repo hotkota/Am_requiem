@@ -6,14 +6,14 @@ authors:
 
 targets:
   bot:
-    main: src/bot.cr
+	main: src/bot.cr
 
 dependencies:
   discordcr:
-    github: shardlab/discordcr
+	github: shardlab/discordcr
   redis:
-    github: stefanwille/crystal-redis
-    version: ~> 2.7.0
+	github: stefanwille/crystal-redis
+	version: ~> 2.7.0
 
 crystal: 1.0.0
 

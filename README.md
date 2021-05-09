@@ -4,6 +4,8 @@
 
 ## Installation
 
+Install RedisDB and
+
 ```bash
 git clone https://github.com/Hotkota/Am_requiem.git
 cd Am_requiem
@@ -19,7 +21,7 @@ or
 
 ```bash
 crystal build src/am.cr
-./bot
+./am
 ```
 
 ## Development

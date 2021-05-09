@@ -1,5 +1,5 @@
 require "./*"
 
 class Commands
-    extend Command
+	extend Command
 end

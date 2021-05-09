@@ -1,5 +1,5 @@
 require "./*"
 
 class Events
-    extend Event
+	extend Event
 end

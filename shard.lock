@@ -1,14 +1,14 @@
 version: 2.0
 shards:
   discordcr:
-    git: https://github.com/shardlab/discordcr.git
-    version: 0.4.0+git.commit.c0adeeacd5ac9e1faba29cc65f4bb1435e4b9865
+	git: https://github.com/shardlab/discordcr.git
+	version: 0.4.0+git.commit.c0adeeacd5ac9e1faba29cc65f4bb1435e4b9865
 
   pool:
-    git: https://github.com/ysbaddaden/pool.git
-    version: 0.2.4
+	git: https://github.com/ysbaddaden/pool.git
+	version: 0.2.4
 
   redis:
-    git: https://github.com/stefanwille/crystal-redis.git
-    version: 2.7.0
+	git: https://github.com/stefanwille/crystal-redis.git
+	version: 2.7.0
 

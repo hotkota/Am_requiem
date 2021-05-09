@@ -15,15 +15,15 @@ module Am
   client.cache = cache
 
   client.on_ready do
-    Events.on_ready(client)
+	Events.on_ready(client)
   end
 
   client.on_message_create do |message|
-    Events.on_message(client, cache, message)
+	Events.on_message(client, cache, message)
   end
 
   client.on_guild_delete do |guild|
-    Events.guild_delete(cache, guild)
+	Events.guild_delete(cache, guild)
   end
   
   client.run
