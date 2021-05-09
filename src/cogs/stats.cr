@@ -1,3 +1,4 @@
+require "../am"
 require "redis"
 require "discordcr"
 
@@ -23,6 +24,10 @@ module Command
                         name: "Память",
                         value: "выделено: `#{(GC.stats.heap_size/1000/1000).round(0).to_i} mb`\nиспользуется: `#{(GC.stats.total_bytes/1000/1000).round(0).to_i} mb`\nсвободно: `#{(GC.stats.free_bytes/1000/1000).round(0).to_i} mb`"
                     ),
+                    Discord::EmbedField.new(
+                        name: "Проект",
+                        value: "версия: `#{Am::VERSION}`\ncrystal: `#{Crystal::VERSION}`\nсоздатель: `Hot_kota#1231`"
+                    )
                 ],
                 timestamp: Time.utc
             )
