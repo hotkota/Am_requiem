@@ -55,6 +55,8 @@ module Event
                     Commands.prefix_find(client, message, cache, prefix)
                 elsif (message.content.starts_with? "#{prefix}logs") || (message.content.starts_with? "#{prefix}логи")
                     Commands.set_log_channel(client, cache, message, Redis_DB_Guild, prefix)
+                elsif (message.content.starts_with? "#{prefix}stat") || (message.content.starts_with? "#{prefix}стат")
+                    Commands.stats(client, cache, message, Config::Redis["tags"], Config::Redis["stats"])
                 end
             end
         end
