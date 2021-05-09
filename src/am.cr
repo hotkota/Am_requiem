@@ -21,6 +21,10 @@ module Am
   client.on_message_create do |message|
     Events.on_message(client, cache, message)
   end
+
+  client.on_guild_delete do |guild|
+    Events.guild_delete(cache, guild)
+  end
   
   client.run
 end

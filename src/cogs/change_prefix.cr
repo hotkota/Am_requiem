@@ -3,21 +3,20 @@ require "redis"
 
 module Command
     def prefix(client, cache, message, redis_db, prefix)
-        if !cache.resolve_guild(message.guild_id.not_nil!.to_u64).owner_id.to_s == message.author.id.to_s
+        if cache.resolve_guild(message.guild_id.not_nil!.to_u64).owner_id.to_s == message.author.id.to_s
             change_prefix(client, cache, message, redis_db, prefix)
-        else
-            if !message.member.not_nil!.roles.empty?
-                message.member.not_nil!.roles.each do |role|
-                    role = cache.resolve_role(role)
-                    if role.permissions.administrator? || role.permissions.manage_guild?
-                        change_prefix(client, cache, message, redis_db, prefix)
-                    else
-                        client.create_reaction(message.channel_id, message.id, "❌")
-                    end
+        elsif !message.member.not_nil!.roles.empty?
+            message.member.not_nil!.roles.each_with_index do |role, i|
+                role = cache.resolve_role(role)
+                if role.permissions.administrator? || role.permissions.manage_guild?
+                    change_prefix(client, cache, message, redis_db, prefix)
+                    break
+                elsif i == message.member.not_nil!.roles.size
+                    client.create_reaction(message.channel_id, message.id, "❌")
                 end
-            else
-                client.create_reaction(message.channel_id, message.id, "❌")
             end
+        else
+            client.create_reaction(message.channel_id, message.id, "❌")    
         end
     end
 

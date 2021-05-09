@@ -31,15 +31,15 @@ module Command
                         colour: 0xff5587,
                         fields: [
                             Discord::EmbedField.new(
-                                name: "#{prefix}тег название",
+                                name: "#{prefix}тег *название*",
                                 value: "`вывести значение тега`"
                             ),
                             Discord::EmbedField.new(
-                                name: "#{prefix}тег удалить название",
+                                name: "#{prefix}тег удалить *название*",
                                 value: "`удалить тег навсегда`"
                             ),
                             Discord::EmbedField.new(
-                                name: "#{prefix}тег создать имя | значение",
+                                name: "#{prefix}тег создать *имя* | *значение*",
                                 value: "`создать тег`"
                             ),
                         ],
@@ -51,15 +51,15 @@ module Command
                         colour: 0xff5587,
                         fields: [
                             Discord::EmbedField.new(
-                                name: "#{prefix}tag name",
+                                name: "#{prefix}tag *name*",
                                 value: "`outputs the value of the tag`"
                             ),
                             Discord::EmbedField.new(
-                                name: "#{prefix}tag delete name",
+                                name: "#{prefix}tag delete *name*",
                                 value: "`remove tag`"
                             ),
                             Discord::EmbedField.new(
-                                name: "#{prefix}tag create name | value",
+                                name: "#{prefix}tag create *name* | *value*",
                                 value: "`create tag`"
                             ),
                         ],

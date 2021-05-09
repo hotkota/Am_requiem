@@ -14,7 +14,12 @@ module Event
                 if redis.get(message.author.id.to_s).nil?
                     redis.set(
                         message.author.id.to_s,
-                        {"permission" => Permission::No.value, "premium" => false, "count_premium" => 0, "premium_guilds" => [] of UInt64}.to_yaml.to_s
+                        {
+                            "permission" => Permission::No.value,
+                            "premium" => false,
+                            "count_premium" => 0,
+                            "premium_guilds" => [] of UInt64
+                        }.to_yaml.to_s
                     )
                 end
             end
@@ -23,7 +28,13 @@ module Event
                 if redis.get(cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s).nil?
                     redis.set(
                         cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s,
-                        {"prefix" => "//", "premium" => false}.to_yaml.to_s
+                        {
+                            "prefix" => "//",
+                            "premium" => false,
+                            "log_channel" => nil,
+                            "hello_channel" => nil,
+                            "leave_channel" => nil
+                        }.to_yaml.to_s
                     )
                 end
             end
@@ -42,6 +53,8 @@ module Event
                     Commands.prefix(client, cache, message, Redis_DB_Guild, prefix)
                 elsif (message.content =="<@#{Config::Client_id}>")
                     Commands.prefix_find(client, message, cache, prefix)
+                elsif (message.content.starts_with? "#{prefix}logs") || (message.content.starts_with? "#{prefix}логи")
+                    Commands.set_log_channel(client, cache, message, Redis_DB_Guild, prefix)
                 end
             end
         end
