@@ -20,7 +20,7 @@ module Command
 					),
 					Discord::EmbedField.new(
 						name: "Настройка",
-						value: "`#{prefix}префикс` `#{prefix}логи`"
+						value: "`#{prefix}префикс`"
 					)
 				],
 				timestamp: Time.utc
@@ -44,7 +44,7 @@ module Command
 					),
 					Discord::EmbedField.new(
 						name: "settings",
-						value: "`#{prefix}prefix` `#{prefix}logs`"
+						value: "`#{prefix}prefix`"
 					)
 				],
 				timestamp: Time.utc

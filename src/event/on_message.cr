@@ -32,10 +32,14 @@ module Event
 							"prefix" => "//",
 							"premium" => false,
 							"log_channel" => nil,
-							"hello_channel" => nil,
-							"hello_message" => nil,
-							"leave_channel" => nil,
-							"leave_message" => nil,
+							"hello" => {
+								"hello_channel" => nil,
+								"hello_message" => nil
+							},
+							"leave" => {
+								"leave_channel" => nil,
+								"leave_message" => nil
+							}
 						}.to_yaml.to_s
 					)
 				end

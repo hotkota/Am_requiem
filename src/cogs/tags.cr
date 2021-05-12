@@ -8,7 +8,7 @@ module Command
 			if content[0] == "create" || content[0] == "создать"
 				if content[1].split("|", limit: 3, remove_empty: true).size == 2
 					Redis.open(database: db) do |redis|
-						data = content[1].split("|", limit: 3, remove_empty: true)
+						data = content[1].split("|", limit: 2, remove_empty: true)
 						redis.set(data[0].strip, data[1].strip)
 					end
 					client.create_reaction(message.channel_id, message.id, "✔")
@@ -69,8 +69,17 @@ module Command
 				client.create_message(message.channel_id, "", embed)
 			else
 				Redis.open(database: db) do |redis|
-					if !redis.get(content[0]).nil?
-						client.create_message(message.channel_id, redis.get(content[0]).not_nil!)
+					if !redis.get(message.content.lchop("#{prefix}tag").lchop("#{prefix}тег").strip()).nil?
+						content = redis.get(message.content.lchop("#{prefix}tag").lchop("#{prefix}тег").strip()).not_nil!
+						if (!content.index("@everyone").nil?) || (!content.index("@here").nil?)
+							client.create_message(message.channel_id, "", Discord::Embed.new(
+									colour: 0xff5587,
+									description: content
+								)
+							)
+						else
+							client.create_message(message.channel_id, content)
+						end
 					else
 						client.create_reaction(message.channel_id, message.id, "❌")
 					end

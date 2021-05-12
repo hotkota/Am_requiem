@@ -22,12 +22,8 @@ module Command
 					),
 					Discord::EmbedField.new(
 						name: "Память",
-						value: "выделено: `#{(GC.stats.heap_size/1000/1000).round(0).to_i} mb`\nиспользуется: `#{(GC.stats.total_bytes/1000/1000).round(0).to_i} mb`\nсвободно: `#{(GC.stats.free_bytes/1000/1000).round(0).to_i} mb`"
+						value: "выделено: `#{(GC.stats.total_bytes/1000/1000).round(0).to_i} mb`\nиспользуется: `#{(GC.stats.heap_size/1000/1000).round(0).to_i} mb`\nрезерв: `#{(GC.stats.free_bytes/1000/1000).round(0).to_i} mb`"
 					),
-					Discord::EmbedField.new(
-						name: "Проект",
-						value: "версия: `#{Am::VERSION}`\ncrystal: `#{Crystal::VERSION}`\nсоздатель: `Hot_kota#1231`"
-					)
 				],
 				timestamp: Time.utc
 			)
@@ -49,7 +45,7 @@ module Command
 					),
 					Discord::EmbedField.new(
 						name: "Memory",
-						value: "allocated `#{(GC.stats.heap_size/1000/1000).round(0).to_i} mb`\nused: `#{(GC.stats.total_bytes/1000/1000).round(0).to_i} mb`\nfree: `#{(GC.stats.free_bytes/1000/1000).round(0).to_i} mb`"
+						value: "allocated `#{(GC.stats.total_bytes/1000/1000).round(0).to_i} mb`\nused: `#{(GC.stats.heap_size/1000/1000).round(0).to_i } mb`\nfree: `#{(GC.stats.free_bytes/1000/1000).round(0).to_i} mb`"
 					)
 				],
 				timestamp: Time.utc

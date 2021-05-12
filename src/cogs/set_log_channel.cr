@@ -36,8 +36,14 @@ module Command
 									"prefix" => data["prefix"].as_s,
 									"premium" => data["premium"].as_bool,
 									"log_channel" => channel.id.to_s,
-									"hello_channel" => data["hello_channel"].as_s?,
-									"leave_channel" => data["leave_channel"].as_s?
+									"hello" => {
+										"hello_channel" => data["hello"]["hello_channel"].as_s?,
+										"hello_message" => data["hello"]["hello_message"].as_s?
+									},
+									"leave" => {
+										"leave_channel" => data["leave"]["leave_channel"].as_s?,
+										"leave_message" => data["leave"]["leave_channel"].as_s?
+									}
 								}.to_yaml.to_s
 							)
 							client.create_reaction(message.channel_id, message.id, "✔")
@@ -82,8 +88,14 @@ module Command
 							"prefix" => data["prefix"].as_s,
 							"premium" => data["premium"].as_bool,
 							"log_channel" => channel.id.to_s,
-							"hello_channel" => data["hello_channel"].as_s?,
-							"leave_channel" => data["leave_channel"].as_s?
+							"hello" => {
+								"hello_channel" => data["hello"]["hello_channel"].as_s?,
+								"hello_message" => data["hello"]["hello_message"].as_s?
+							},
+							"leave" => {
+								"leave_channel" => data["leave"]["leave_channel"].as_s?,
+								"leave_message" => data["leave"]["leave_channel"].as_s?
+							}
 						}.to_yaml.to_s
 					)
 					client.create_reaction(message.channel_id, message.id, "✔")
@@ -101,8 +113,14 @@ module Command
 							"prefix" => data["prefix"].as_s,
 							"premium" => data["premium"].as_bool,
 							"log_channel" => nil,
-							"hello_channel" => data["hello_channel"].as_s?,
-							"leave_channel" => data["leave_channel"].as_s?
+							"hello" => {
+								"hello_channel" => data["hello"]["hello_channel"].as_s?,
+								"hello_message" => data["hello"]["hello_message"].as_s?
+							},
+							"leave" => {
+								"leave_channel" => data["leave"]["leave_channel"].as_s?,
+								"leave_message" => data["leave"]["leave_channel"].as_s?
+							}
 						}.to_yaml.to_s
 					)
 					client.create_reaction(message.channel_id, message.id, "✔")
