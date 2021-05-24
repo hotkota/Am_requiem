@@ -14,8 +14,6 @@ dependencies:
   redis:
     github: stefanwille/crystal-redis
     version: ~> 2.7.0
-  hardware:
-    github: crystal-community/hardware
 
 crystal: 1.0.0
 

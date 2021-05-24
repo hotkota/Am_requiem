@@ -46,23 +46,24 @@ module Event
 			end
 
 			Redis.open(database: Redis_DB_Guild) do |redis|
-				prefix = YAML.parse(redis.get(cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s).not_nil!)["prefix"]
-				if (message.content.starts_with? "#{prefix}ping") || (message.content.starts_with? "#{prefix}пинг")
+				prefix = YAML.parse(redis.get(cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s).not_nil!)["prefix"].as_s
+				case message.content.lchop(prefix).strip().split(" ", remove_empty: true)[0]
+				when "ping", "пинг"
 					Commands.ping(client, cache, message)
-				elsif (message.content.starts_with? "#{prefix}tag") || (message.content.starts_with? "#{prefix}тег")
+				when "tag", "тег"
 					Commands.tags(client, message, Config::Redis["tags"], prefix, cache)
-				elsif (message.content.starts_with? "#{prefix}help") || (message.content.starts_with? "#{prefix}хелп")
+				when "help", "хелп"
 					Commands.help(client, cache, message, prefix)
-				elsif (message.content.starts_with? "#{prefix}bonus") || (message.content.starts_with? "#{prefix}бонус")
-					Commands.premium(client, cache, message, Redis_DB_Member)
-				elsif (message.content.starts_with? "#{prefix}prefix") || (message.content.starts_with? "#{prefix}префикс")
+				when "prefix", "префикс"
 					Commands.prefix(client, cache, message, Redis_DB_Guild, prefix)
-				elsif (message.content =="<@#{Config::Client_id}>")
-					Commands.prefix_find(client, message, cache, prefix)
-				elsif (message.content.starts_with? "#{prefix}logs") || (message.content.starts_with? "#{prefix}логи")
+				when "logs", "логи"
 					Commands.set_log_channel(client, cache, message, Redis_DB_Guild, prefix)
-				elsif (message.content.starts_with? "#{prefix}stat") || (message.content.starts_with? "#{prefix}стат")
+				when "stat", "стат"
 					Commands.stats(client, cache, message, Config::Redis["tags"])
+				else
+					if message.content == "<@#{client.client_id}>"
+						Commands.prefix_find(client, message, cache, prefix)
+					end
 				end
 			end
 		end

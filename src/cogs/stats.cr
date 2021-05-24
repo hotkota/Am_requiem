@@ -1,6 +1,5 @@
 require "../am"
 require "redis"
-require "hardware"
 require "discordcr"
 
 module Command
@@ -25,10 +24,6 @@ module Command
 						name: "Память",
 						value: "выделено: `#{(GC.stats.total_bytes/1000/1000).round(0).to_i} mb`\nиспользуется: `#{(GC.stats.heap_size/1000/1000).round(0).to_i} mb`\nрезерв: `#{(GC.stats.free_bytes/1000/1000).round(0).to_i} mb`"
 					),
-					Discord::EmbedField.new(
-						name: "Процессор",
-						value: "ядер: #{System.cpu_count}\nиспользуется: #{Hardware::PID.new("am_bin").stat.cpu_usage!.to_i}%"
-					),
 				],
 				timestamp: Time.utc
 			)
@@ -51,10 +46,6 @@ module Command
 					Discord::EmbedField.new(
 						name: "Memory",
 						value: "allocated `#{(GC.stats.total_bytes/1000/1000).round(0).to_i} mb`\nused: `#{(GC.stats.heap_size/1000/1000).round(0).to_i } mb`\nfree: `#{(GC.stats.free_bytes/1000/1000).round(0).to_i} mb`"
-					),
-					Discord::EmbedField.new(
-						name: "CPU",
-						value: "cores: #{System.cpu_count}\nused: #{Hardware::PID.new("am_bin").stat.cpu_usage!.to_i}%"
 					),
 				],
 				timestamp: Time.utc
