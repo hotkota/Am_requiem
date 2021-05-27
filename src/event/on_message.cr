@@ -4,13 +4,10 @@ require "../config"
 require "../settings"
 require "../cogs/init"
 
-Redis_DB_Member = Config::Redis["members"]
-Redis_DB_Guild = Config::Redis["guilds"]
-
 module Event
 	def on_message(client, cache, message)
 		if !message.author.bot
-			Redis.open(database: Redis_DB_Member) do |redis|
+			Redis.open(database: Config::Redis["members"]) do |redis|
 				if redis.get(message.author.id.to_s).nil?
 					redis.set(
 						message.author.id.to_s,
@@ -24,29 +21,31 @@ module Event
 				end
 			end
 
-			Redis.open(database: Redis_DB_Guild) do |redis|
-				if redis.get(cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s).nil?
-					redis.set(
-						cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s,
-						{
-							"prefix" => "//",
-							"premium" => false,
-							"log_channel" => nil,
-							"hello" => {
-								"hello_channel" => nil,
-								"hello_message" => nil
-							},
-							"leave" => {
-								"leave_channel" => nil,
-								"leave_message" => nil
-							}
-						}.to_yaml.to_s
-					)
+			if !(cache.resolve_channel(message.channel_id).type.dm?)
+				Redis.open(database: Config::Redis["guilds"]) do |redis|
+					if redis.get(message.guild_id.not_nil!.to_s).nil?
+						redis.set(
+							message.guild_id.not_nil!.to_s,
+							{
+								"prefix" => "//",
+								"premium" => false,
+								"log_channel" => nil,
+								"hello" => {
+									"hello_channel" => nil,
+									"hello_message" => nil
+								},
+								"leave" => {
+									"leave_channel" => nil,
+									"leave_message" => nil
+								}
+							}.to_yaml.to_s
+						)
+					end
 				end
 			end
 
-			Redis.open(database: Redis_DB_Guild) do |redis|
-				prefix = YAML.parse(redis.get(cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s).not_nil!)["prefix"].as_s
+			Redis.open(database: Config::Redis["guilds"]) do |redis|
+				prefix = YAML.parse(redis.get(message.guild_id.not_nil!.to_s).not_nil!)["prefix"].as_s
 				case message.content.lchop(prefix).strip().split(" ", remove_empty: true)[0]
 				when "ping", "пинг"
 					Commands.ping(client, cache, message)
@@ -55,9 +54,9 @@ module Event
 				when "help", "хелп"
 					Commands.help(client, cache, message, prefix)
 				when "prefix", "префикс"
-					Commands.prefix(client, cache, message, Redis_DB_Guild, prefix)
+					Commands.prefix(client, cache, message, Config::Redis["guilds"], prefix)
 				when "logs", "логи"
-					Commands.set_log_channel(client, cache, message, Redis_DB_Guild, prefix)
+					Commands.set_log_channel(client, cache, message, Config::Redis["guilds"], prefix)
 				when "stat", "стат"
 					Commands.stats(client, cache, message, Config::Redis["tags"])
 				else

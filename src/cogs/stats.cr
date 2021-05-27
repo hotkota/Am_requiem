@@ -13,8 +13,8 @@ module Command
 				),
 				fields: [
 					Discord::EmbedField.new(
-						name: "Сервера",
-						value: "`#{cache.guilds.size}`"
+						name: "Основное",
+						value: "серверов: `#{cache.guilds.size}`"
 					),
 					Discord::EmbedField.new(
 						name: "База данных",
