@@ -59,6 +59,8 @@ module Event
 					Commands.set_log_channel(client, cache, message, Config::Redis["guilds"], prefix)
 				when "stat", "стат"
 					Commands.stats(client, cache, message, Config::Redis["tags"])
+				when "bot", "бот"
+					Commands.info(client, cache, message)
 				else
 					if message.content == "<@#{client.client_id}>"
 						Commands.prefix_find(client, message, cache, prefix)

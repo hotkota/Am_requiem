@@ -12,7 +12,7 @@ module Command
 				fields: [
 					Discord::EmbedField.new(
 						name: "Информация",
-						value: "`#{prefix}хелп` `#{prefix}пинг` `#{prefix}стат`"
+						value: "`#{prefix}хелп` `#{prefix}пинг` `#{prefix}стат` `#{prefix}бот`"
 					),
 					Discord::EmbedField.new(
 						name: "Теги",
@@ -36,7 +36,7 @@ module Command
 				fields: [
 					Discord::EmbedField.new(
 						name: "info",
-						value: "`#{prefix}help` `#{prefix}ping` `#{prefix}stat`"
+						value: "`#{prefix}help` `#{prefix}ping` `#{prefix}stat` `#{prefix}bot`"
 					),
 					Discord::EmbedField.new(
 						name: "tag",

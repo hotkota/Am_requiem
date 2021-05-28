@@ -6,7 +6,7 @@ require "./event/init"
 
 # TODO: Write documentation for `Bot`
 module Am
-  VERSION = "0.1.0"
+  VERSION = "1.0.0"
 
   # TODO: Put your code here
   Log.setup(:notice)
