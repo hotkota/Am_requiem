@@ -15,8 +15,8 @@ module Command
 							data[0].strip,
 							{
 								"value": data[1].strip,
-								"author": message.author.id.to_s,
-								"guild": message.guild_id.to_s,
+								"author": message.author.id.to_u64,
+								"guild": message.guild_id.not_nil!.to_u64,
 								"timestamp": Time.utc.to_s
 							}.to_yaml
 						)
