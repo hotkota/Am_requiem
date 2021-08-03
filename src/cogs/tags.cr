@@ -115,6 +115,10 @@ module Command
 								name: "#{prefix}тег создать *имя* | *значение*",
 								value: "`создать тег`"
 							),
+							Discord::EmbedField.new(
+								name: "#{prefix}тег alias *название* | *новое_название*",
+								value: "новый тег с тем же названием"
+							)
 						],
 						timestamp: Time.utc
 					)
@@ -142,11 +146,32 @@ module Command
 								name: "#{prefix}tag create *name* | *value*",
 								value: "`create tag`"
 							),
+							Discord::EmbedField.new(
+								name: "#{prefix}tag alias *name* | *new_name*",
+								value: ":shrimp:"
+							),
 						],
 						timestamp: Time.utc
 					)
 				end
 				client.create_message(message.channel_id, "", embed)
+			when "alias"
+				Redis.open(database: db) do |redis|
+					if content[1].split("|", limit: 2, remove_empty: true).size == 2
+						content = content[1].split("|", limit: 2, remove_empty: true)
+						if !redis.get(content[0].to_s.strip).nil?
+							redis.set(
+								content[1].to_s.strip,
+								redis.get(content[0].to_s.strip).not_nil!
+							)
+							client.create_reaction(message.channel_id, message.id, "✔")
+						else
+							client.create_reaction(message.channel_id, message.id, "❌")
+						end
+					else
+						client.create_reaction(message.channel_id, message.id, "❌")
+					end
+				end
 			else
 				Redis.open(database: db) do |redis|
 					if !redis.get(message.content.lchop("#{prefix}tag").lchop("#{prefix}тег").strip()).nil?
