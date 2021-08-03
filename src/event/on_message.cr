@@ -46,6 +46,9 @@ module Event
 
 			Redis.open(database: Config::Redis["guilds"]) do |redis|
 				prefix = YAML.parse(redis.get(message.guild_id.not_nil!.to_s).not_nil!)["prefix"].as_s
+				if message.content.strip == "<@#{client.client_id}>"
+					Commands.prefix_find(client, message, cache, prefix)
+				end
 				return if !message.content.starts_with?(prefix)
 				case message.content.lchop(prefix).strip().split(" ", remove_empty: true)[0]
 				when "ping", "пинг"
@@ -62,10 +65,6 @@ module Event
 					Commands.stats(client, cache, message, Config::Redis["tags"])
 				when "bot", "бот"
 					Commands.info(client, cache, message)
-				else
-					if message.content == "<@#{client.client_id}>"
-						Commands.prefix_find(client, message, cache, prefix)
-					end
 				end
 			end
 		end
