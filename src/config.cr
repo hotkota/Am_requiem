@@ -4,6 +4,7 @@ module Config
   Redis = {
     "tags" => 0,
     "members" => 1,
-    "guilds" => 2
+    "guilds" => 2,
+    "reaction" => 3
   }
 end

@@ -10,7 +10,7 @@ module Am
 
   # TODO: Put your code here
   Log.setup(:notice)
-  client = Discord::Client.new(token: "Bot #{Config::Token}", client_id: Config::Client_id, intents: Discord::Gateway::Intents::Guilds | Discord::Gateway::Intents::GuildMessages)
+  client = Discord::Client.new(token: "Bot #{Config::Token}", client_id: Config::Client_id, intents: Discord::Gateway::Intents::Guilds | Discord::Gateway::Intents::GuildMessages | Discord::Gateway::Intents::GuildMessageReactions)
   cache = Discord::Cache.new(client)
   client.cache = cache
 
@@ -26,8 +26,8 @@ module Am
 	  Events.guild_delete(cache, guild)
   end
 
-  client.on_guild_member_add do |member_payload|
-    Events.member_join(client, member_payload, Config::Redis["members"])
+  client.on_message_reaction_add do |handler|
+    Events.message_reaction_add(client, cache, handler, Config::Redis["reaction"])
   end
 
   client.run

@@ -65,6 +65,8 @@ module Event
 					Commands.stats(client, cache, message, Config::Redis["tags"])
 				when "bot", "бот"
 					Commands.info(client, cache, message)
+				when "reaction", "реакции"
+					Commands.message_reaction(client, message, Config::Redis["reaction"])
 				end
 			end
 		end
