@@ -25,7 +25,6 @@ module Command
 				],
 				timestamp: Time.utc
 			)
-			client.create_message(message.channel_id, "", embed)
 		else
 			embed = Discord::Embed.new(
 				title: "Help",
@@ -49,7 +48,11 @@ module Command
 				],
 				timestamp: Time.utc
 			)
-			client.create_message(message.channel_id, "", embed)
 		end
+		client.create_message(
+			channel_id: message.channel_id,
+			content: "",
+			embed: embed
+		)
 	end
 end

@@ -7,9 +7,15 @@ module Event
             Redis.open(database: db) do |redis|
                 if !redis.get(handler.message_id.to_s).nil?
                     if handler.emoji.id.nil?
-                        client.create_message(handler.channel_id, "#{cache.resolve_user(handler.user_id).username} нажал на: #{handler.emoji.name}")
+                        client.create_message(
+                            handler.channel_id,
+                            "#{cache.resolve_user(handler.user_id).username} нажал на: #{handler.emoji.name}"
+                        )
                     else
-                        client.create_message(handler.channel_id, "#{cache.resolve_user(handler.user_id).username} нажал на: <:#{handler.emoji.name}:#{handler.emoji.id.to_s}>")
+                        client.create_message(
+                            handler.channel_id,
+                            "#{cache.resolve_user(handler.user_id).username} нажал на: <:#{handler.emoji.name}:#{handler.emoji.id.to_s}>"
+                        )
                     end
                 end
             end

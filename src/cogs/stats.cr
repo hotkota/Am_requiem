@@ -51,6 +51,10 @@ module Command
 				timestamp: Time.utc
 			)
 		end
-		client.create_message(message.channel_id, "", embed)
+		client.create_message(
+			channel_id: message.channel_id,
+			content: "",
+			embed: embed
+		)
 	end
 end
