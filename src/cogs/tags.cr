@@ -11,15 +11,20 @@ module Command
 				if content[1].split("|", limit: 2, remove_empty: true).size == 2
 					Redis.open(database: db) do |redis|
 						data = content[1].split("|", limit: 2, remove_empty: true)
-						redis.set(
-							data[0].strip,
-							{
-								"value": data[1].strip,
-								"author": message.author.id.to_u64,
-								"guild": message.guild_id.not_nil!.to_u64,
-								"timestamp": Time.utc.to_s
-							}.to_yaml
-						)
+						if  data[0].size <= 32 || data[1].size <= 512
+							redis.set(
+								data[0].strip,
+								{
+									"value": data[1].strip,
+									"author": message.author.id.to_u64,
+									"guild": message.guild_id.not_nil!.to_u64,
+									"timestamp": Time.utc.to_s
+								}.to_yaml
+							)
+						else
+							client.create_reaction(message.channel_id, message.id, "❌")
+							client.create_message(message.channel_id, "Слишком длинное название или значение тега")
+						end
 					end
 					client.create_reaction(message.channel_id, message.id, "✔")
 				else
@@ -38,52 +43,47 @@ module Command
 				Redis.open(database: db) do |redis|
 					if !redis.get(content[1].strip).nil?
 						data = YAML.parse(redis.get(content[1]).not_nil!)
+
+						embed = Discord::Embed.new(
+							colour: 0xff5587,
+							thumbnail: Discord::EmbedThumbnail.new(
+								url: cache.resolve_user(data["author"].as_i64.to_u64).avatar_url
+							),
+							timestamp: Time.utc
+						)
+
 						if cache.resolve_guild(message.guild_id.not_nil!.to_u64).region == "russia"
-							embed = Discord::Embed.new(
-								title: "тег инфо",
-								colour: 0xff5587,
-								thumbnail: Discord::EmbedThumbnail.new(
-									url: cache.resolve_user(data["author"].as_i64.to_u64).avatar_url
+							embed.title = "тег инфо"
+							embed.fields = [
+								Discord::EmbedField.new(
+									name: "тег",
+									value: "имя: #{content[1]}\nсодержимое: #{data["value"]}"
 								),
-								fields: [
-									Discord::EmbedField.new(
-										name: "тег",
-										value: "имя: #{content[1]}\nсодержимое: #{data["value"]}"
-									),
-									Discord::EmbedField.new(
-										name: "автор",
-										value: "ник: `#{cache.resolve_user(data["author"].as_i64.to_u64).username}##{cache.resolve_user(data["author"].as_i64.to_u64).discriminator}\n`id: `#{data["author"]}`"
-									),
-									Discord::EmbedField.new(
-										name: "создан",
-										value: "`#{data["timestamp"].as_s}`"
-									)
-								],
-								timestamp: Time.utc
-							)
+								Discord::EmbedField.new(
+									name: "автор",
+									value: "ник: `#{cache.resolve_user(data["author"].as_i64.to_u64).username}##{cache.resolve_user(data["author"].as_i64.to_u64).discriminator}\n`id: `#{data["author"]}`"
+								),
+								Discord::EmbedField.new(
+									name: "создан",
+									value: "`#{data["timestamp"].as_s}`"
+								)
+							]
 						else
-							embed = Discord::Embed.new(
-								title: "tag info",
-								colour: 0xff5587,
-								thumbnail: Discord::EmbedThumbnail.new(
-									url: cache.resolve_user(data["author"].as_i64.to_u64).avatar_url
+							embed.title = "tag info"
+							embedfields = [
+								Discord::EmbedField.new(
+									name: "tag",
+									value: "name: #{content[1]}\nvalue: #{data["value"]}"
 								),
-								fields: [
-									Discord::EmbedField.new(
-										name: "tag",
-										value: "name: #{content[1]}\nvalue: #{data["value"]}"
-									),
-									Discord::EmbedField.new(
-										name: "author",
-										value: "nickname: `#{cache.resolve_user(data["author"].as_i64.to_u64).username}##{cache.resolve_user(data["author"].as_i64.to_u64).discriminator}\n`id: `#{data["author"]}`"
-									),
-									Discord::EmbedField.new(
-										name: "create at",
-										value: "`#{data["timestamp"].as_s}`"
-									)
-								],
-								timestamp: Time.utc
-							)
+								Discord::EmbedField.new(
+									name: "author",
+									value: "nickname: `#{cache.resolve_user(data["author"].as_i64.to_u64).username}##{cache.resolve_user(data["author"].as_i64.to_u64).discriminator}\n`id: `#{data["author"]}`"
+								),
+								Discord::EmbedField.new(
+									name: "create at",
+									value: "`#{data["timestamp"].as_s}`"
+								)
+							]
 						end
 						client.create_message(message.channel_id, "", embed)
 					else
@@ -91,68 +91,61 @@ module Command
 					end
 				end
 			when "?"
+				embed = Discord::Embed.new(
+					colour: 0xff5587,
+					thumbnail: Discord::EmbedThumbnail.new(
+						url: cache.resolve_user(client.client_id).avatar_url
+					),
+					timestamp: Time.utc
+				)
 				if cache.resolve_guild(message.guild_id.not_nil!.to_u64).region == "russia"
-					embed = Discord::Embed.new(
-						title: "хелп `#{prefix}тег`",
-						colour: 0xff5587,
-						thumbnail: Discord::EmbedThumbnail.new(
-							url: cache.resolve_user(client.client_id).avatar_url
+					embed.title = "хелп `#{prefix}тег`"
+					embed.fields = [
+						Discord::EmbedField.new(
+							name: "#{prefix}тег *название*",
+							value: "`вывести значение тега`"
 						),
-						fields: [
-							Discord::EmbedField.new(
-								name: "#{prefix}тег *название*",
-								value: "`вывести значение тега`"
-							),
-							Discord::EmbedField.new(
-								name: "#{prefix}тег инфо *название*",
-								value: "`информация о теге`"
-							),
-							Discord::EmbedField.new(
-								name: "#{prefix}тег удалить *название*",
-								value: "`удалить тег навсегда`"
-							),
-							Discord::EmbedField.new(
-								name: "#{prefix}тег создать *имя* | *значение*",
-								value: "`создать тег`"
-							),
-							Discord::EmbedField.new(
-								name: "#{prefix}тег alias *название* | *новое_название*",
-								value: "новый тег с тем же названием"
-							)
-						],
-						timestamp: Time.utc
-					)
+						Discord::EmbedField.new(
+							name: "#{prefix}тег инфо *название*",
+							value: "`информация о теге`"
+						),
+						Discord::EmbedField.new(
+							name: "#{prefix}тег удалить *название*",
+							value: "`удалить тег навсегда`"
+						),
+						Discord::EmbedField.new(
+							name: "#{prefix}тег создать *имя* | *значение*",
+							value: "`создать тег`"
+						),
+						Discord::EmbedField.new(
+							name: "#{prefix}тег alias *название* | *новое_название*",
+							value: "новый тег с тем же названием"
+						)
+					]
 				else
-					embed = Discord::Embed.new(
-						title: "help `#{prefix}tag`",
-						colour: 0xff5587,
-						thumbnail: Discord::EmbedThumbnail.new(
-							url: cache.resolve_user(client.client_id).avatar_url
+					embed.title = "help `#{prefix}tag`"
+					embed.fields = [
+						Discord::EmbedField.new(
+							name: "#{prefix}tag *name*",
+							value: "`outputs the value of the tag`"
 						),
-						fields: [
-							Discord::EmbedField.new(
-								name: "#{prefix}tag *name*",
-								value: "`outputs the value of the tag`"
-							),
-							Discord::EmbedField.new(
-								name: "#{prefix}tag info *name*",
-								value: "`info about tag`"
-							),
-							Discord::EmbedField.new(
-								name: "#{prefix}tag delete *name*",
-								value: "`remove tag`"
-							),
-							Discord::EmbedField.new(
-								name: "#{prefix}tag create *name* | *value*",
-								value: "`create tag`"
-							),
-							Discord::EmbedField.new(
-								name: "#{prefix}tag alias *name* | *new_name*",
-								value: ":shrimp:"
-							),
-						],
-						timestamp: Time.utc
-					)
+						Discord::EmbedField.new(
+							name: "#{prefix}tag info *name*",
+							value: "`info about tag`"
+						),
+						Discord::EmbedField.new(
+							name: "#{prefix}tag delete *name*",
+							value: "`remove tag`"
+						),
+						Discord::EmbedField.new(
+							name: "#{prefix}tag create *name* | *value*",
+							value: "`create tag`"
+						),
+						Discord::EmbedField.new(
+							name: "#{prefix}tag alias *name* | *new_name*",
+							value: ":shrimp:"
+						),
+					]
 				end
 				client.create_message(message.channel_id, "", embed)
 			when "alias"

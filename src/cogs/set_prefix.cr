@@ -21,23 +21,32 @@ module Command
 	end
 
 	private def change_prefix(client, cache, message, redis_db, prefix)
-		Redis.open(database: redis_db) do |redis|
-			old_data = YAML.parse(redis.get(cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s).not_nil!)
-			redis.set(
-				cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s,
-				{
-					"prefix" => message.content.lchop("#{prefix}prefix").lchop("#{prefix}префикс").sub("\\s", " ").lstrip().to_s,
-					"hello" => {
-						"hello_channel" => old_data["hello"]["hello_channel"].as_s?,
-						"hello_message" => old_data["hello"]["hello_message"].as_s?
-					},
-					"leave" => {
-						"leave_channel" => old_data["leave"]["leave_channel"].as_s?,
-						"leave_message" => old_data["leave"]["leave_message"].as_s?
-					}
-				}.to_yaml.to_s
-			)
-			client.create_reaction(message.channel_id, message.id, "✔")
+		if message.content.lchop("#{prefix}prefix").lchop("#{prefix}префикс").sub("\\s", " ").lstrip().size >= 32
+			client.create_reaction(message.channel_id, message.id, "❌")
+			if cache.resolve_guild(message.guild_id.not_nil!.to_u64).region == "russia"
+				client.create_message(message.channel_id, "Максимальная длина префикса 32 символа")
+			else
+				client.create_message(message.channel_id, "Maximum prefix length 32 characters")
+			end
+		else
+			Redis.open(database: redis_db) do |redis|
+				old_data = YAML.parse(redis.get(cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s).not_nil!)
+				redis.set(
+					cache.resolve_guild(message.guild_id.not_nil!.to_u64).id.to_s,
+					{
+						"prefix" => message.content.lchop("#{prefix}prefix").lchop("#{prefix}префикс").sub("\\s", " ").lstrip().to_s,
+						"hello" => {
+							"hello_channel" => old_data["hello"]["hello_channel"].as_s?,
+							"hello_message" => old_data["hello"]["hello_message"].as_s?
+						},
+						"leave" => {
+							"leave_channel" => old_data["leave"]["leave_channel"].as_s?,
+							"leave_message" => old_data["leave"]["leave_message"].as_s?
+						}
+					}.to_yaml.to_s
+				)
+				client.create_reaction(message.channel_id, message.id, "✔")
+			end
 		end
 	end
 end
