@@ -1,5 +1,6 @@
 require "yaml"
 require "redis"
+require "discordcr"
 require "../config"
 require "../cogs/init"
 
@@ -57,5 +58,16 @@ module Event
 				end
 			end
 		end
+	rescue exception
+		client.create_message(
+			channel_id: message.channel_id,
+			content: "",
+			embed: Discord::Embed.new(
+				title: "Ошибка",
+				colour: 0xfc0345,
+				description: "#{exception.message.not_nil!}",
+				timestamp: Time.utc
+			)
+		)
 	end
 end
