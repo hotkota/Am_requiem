@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300&family=Roboto:wght@100&display=swap');
+
+body {
+    font-size: 30px;
+    font-family: 'Roboto', sans-serif;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#heading {
+    position: absolute;
+    margin-top: -5em;
+    margin-left: -1em;
+    width: 100%;
+    top: 50%;
+    text-align: center;
+}
+
+#logo {
+    font-size: 90px;
+}
